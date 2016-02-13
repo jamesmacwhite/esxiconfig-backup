@@ -1,7 +1,7 @@
 #!/bin/sh
 ## esxiconf_backup.sh
 ## Author: James White (james@jmwhite.co.uk)
-## Version 0.1
+## Version 0.1.1
 ##
 ## Description:
 ## Creates a backup of the ESXi host config
@@ -21,9 +21,13 @@ cd "${BACKUP_DIR}" || echo "Cannot switch to specified backup directory" exit 1
 HOSTNAME=$(hostname)
 HOSTNAME_FQDN=$(hostname -f)
 
+# ESXi version values
+ESXI_VERSION_BASE=$(vmware -v | awk '{ print $3 }' | sed "s/\./-/g")
+ESXI_VERSION_BUILD=$(vmware -v | awk '{ print $4 }')
+
 # For the output of the backup.tgz file
 DATE_TIMESTAMP=$(date +"%F_%H-%M-%S")
-TGZ_FILE="configBundle_${HOSTNAME}_${DATE_TIMESTAMP}.tgz"
+TGZ_FILE="configBundle_${ESXI_VERSION_BASE}-${ESXI_VERSION_BUILD}_${HOSTNAME}_${DATE_TIMESTAMP}.tgz"
 
 echo "Syncing config..."
 vim-cmd hostsvc/firmware/sync_config

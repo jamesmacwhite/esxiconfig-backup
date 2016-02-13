@@ -4,7 +4,7 @@ A shell script to generate and download a ESXi config backup to store at a persi
 
 This script runs directly in the hypervisor with minimal resources. A config backup will be generated with a unique datestamp appended to the file name for versioning purposes.
 
-This script is mainly useful if you are running ESXi on a USB/SD card and want to easily recover settings if/when the maximum write cycles [http://serverfault.com/questions/549253/what-happens-when-the-usb-key-or-sd-card-ive-installed-vmware-esxi-on-fails](are eventually reached).
+This script is mainly useful if you are running ESXi on a USB/SD card and want to easily recover settings if/when the maximum write cycles [are eventually reached](http://serverfault.com/questions/549253/what-happens-when-the-usb-key-or-sd-card-ive-installed-vmware-esxi-on-fails).
 
 #### Install
 
@@ -18,7 +18,7 @@ This script is mainly useful if you are running ESXi on a USB/SD card and want t
 
 Two paths are specified, the first is the full path to the shell script, the second is a persistent storage location for the cron log file, which is optional.
 
-In this example, the config backup will be generated every day at 3 AM. You can adjust the time portion `0 3 * * *` to be anything you like. You can generate your our time/date schedule via a [http://www.csgnetwork.com/crongen.html](CRON calculator). Once an ESXi host is setup the configuration data isn't likely to change too much so setting a schedule per week would be acceptable as well.
+In this example, the config backup will be generated every day at 3 AM. You can adjust the time portion `0 3 * * *` to be anything you like. You can generate your our time/date schedule via a [CRON calculator](http://www.csgnetwork.com/crongen.html). Once an ESXi host is setup the configuration data isn't likely to change too much so setting a schedule per week would be acceptable as well.
 
 (Later versions of the script will automatically insert itself as a cron job if needed)
 

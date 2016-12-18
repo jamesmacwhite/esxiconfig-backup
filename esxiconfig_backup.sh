@@ -1,7 +1,7 @@
 #!/bin/sh
 ## esxiconf_backup.sh
 ## Author: James White (james@jmwhite.co.uk)
-## Version 0.1.1
+## Version 0.2
 ##
 ## Description:
 ## Creates a backup of the ESXi host config
@@ -11,11 +11,16 @@
 ## http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2042141
 ##
 
-# Change this to a valid VMFS/NFS path of your choosing
-# Avoid using temporary storage locations on ESXi itself
-BACKUP_DIR="/vmfs/volumes/DataStore/esxiconf_backups"
+if [ $# -ne 1 ] ; then
+    echo "usage: $0 /vmfs/volumes/datastore/folder"
+    exit 1
+fi
 
-cd "${BACKUP_DIR}" || echo "Cannot switch to specified backup directory" exit 1
+# Specify backup dir via parameter to avoid editing the script directly
+BACKUP_DIR=$1
+
+# Check to make sure path is valid
+cd "${BACKUP_DIR}" || echo "Backup directory provided is not accessible" exit 1
 
 # Hostname values
 HOSTNAME=$(hostname)
@@ -38,12 +43,12 @@ CREATE_BACKUP_CMD=$(vim-cmd hostsvc/firmware/backup_config)
 BACKUP_HTTP_PATH=$(echo "${CREATE_BACKUP_CMD}"| awk '{ print $7 }' | sed "s/*/${HOSTNAME_FQDN}/g")
 
 echo "Downloading generated ESXi config backup archive..."
-wget -q -O "${TGZ_FILE}" "${BACKUP_HTTP_PATH}"
 
-if [ $? -ne 0 ] ; then
-	echo "Couldn't download ESXi config backup"
+if ! wget -q -O "${TGZ_FILE}" "${BACKUP_HTTP_PATH}"
+then
+	echo "An error occurred while downloading the config backup"
 	exit 1
+else
+	echo "ESXi config backup has been successfully downloaded!"
+	exit 0
 fi
-
-echo "ESXi config backup has been successfully downloaded"
-exit 0
